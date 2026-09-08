@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Management System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+  <div id="loginPage" class="login-page" style="display:flex">
+<div class="login-card">
+<div class="logo-big"><img src="img/chris.png" alt="Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="fas fa-school" style="display:none"></i></div>
+      <h1>CHRIS-MICTHOMAS SCHOOL OF EXCELLENCE</h1>
+      <p class="subtitle">Sign in to your account</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginUsername">Username</label>
+          <input type="text" id="loginUsername" placeholder="Enter username" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter password" required>
+        </div>
+<button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+      </form>
+      <div style="text-align:center;margin-top:15px;font-size:14px">
+        Don't have an account? <a href="#" onclick="openSignupModal();return false;" style="color:var(--primary);font-weight:600">Sign Up</a>
+      </div>
+      <div class="login-info">
+        <strong>Demo Credentials:</strong><br>
+        Admin: <code>admin</code> / <code>admin123</code><br>
+        Teacher: <code>teacher</code> / <code>teacher123</code><br>
+        Parent: <code>parent</code> / <code>parent123</code>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="app" class="layout" style="display:none">
+
+    <aside id="sidebar" class="sidebar">
+<div class="sidebar-header">
+<div class="logo"><img src="img/chris.png" alt="Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="fas fa-school" style="display:none"></i></div>
+        <div>
+          <h2>CHRIS-MICTHOMAS</h2>
+          <small>School of Excellence</small>
+        </div>
+      </div>
+<nav class="sidebar-nav">
+        <div class="nav-item" data-page="dashboard" data-role="all"><i class="fas fa-th-large"></i> Dashboard</div>
+        <div class="nav-item" data-page="students" data-role="all"><i class="fas fa-user-graduate"></i> Pupils</div>
+        <div class="nav-item" data-page="teachers" data-role="admin"><i class="fas fa-chalkboard-teacher"></i> Teachers</div>
+        <div class="nav-item" data-page="classes" data-role="admin"><i class="fas fa-school"></i> Classes</div>
+<div class="nav-item" data-page="subjects" data-role="all"><i class="fas fa-book"></i> Subjects</div>
+        <div class="nav-item" data-page="attendance" data-role="all"><i class="fas fa-clipboard-check"></i> Attendance</div>
+        <div class="nav-item" data-page="grades" data-role="all"><i class="fas fa-clipboard-list"></i> Grades & Exams</div>
+        <div class="nav-item" data-page="fees" data-role="admin"><i class="fas fa-money-bill-wave"></i> Fees & Payments</div>
+        <div class="nav-item" data-page="parentfees" data-role="parent"><i class="fas fa-money-bill-wave"></i> My Children Fees</div>
+        <div class="nav-item" data-page="settings" data-role="admin"><i class="fas fa-cog"></i> Settings</div>
+      </nav>
+<div class="sidebar-footer">
+        <i class="fas fa-copyright"></i> CHRIS-MICTHOMAS School of Excellence
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <div class="topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <button id="hamburger" class="hamburger"><i class="fas fa-bars"></i></button>
+          <div>
+            <h1 id="pageTitle">Dashboard</h1>
+            <div class="page-name" id="pageName">Dashboard</div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="profile">
+            <div class="avatar" id="userAvatar">A</div>
+            <div class="profile-info">
+              <strong id="userName">Admin</strong>
+              <div style="font-size:12px;color:var(--gray)" id="userRole">Administrator</div>
+            </div>
+          </div>
+          <button id="logoutBtn" class="btn btn-outline btn-sm"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+      </div>
+
+      <div id="content"></div>
+    </main>
+  </div>
+
+  <!-- ===== Modals ===== -->
+
+  <!-- Student Modal -->
+  <div id="studentModal" class="modal-overlay">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+<h2 id="studentModalTitle">Add Pupil</h2>
+        <button class="modal-close" onclick="closeModal('studentModal')">&times;</button>
+      </div>
+      <form id="studentModalForm" onsubmit="saveStudent(event)">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>First Name *</label>
+              <input id="f_studentFirstName" placeholder="First name" required>
+            </div>
+            <div class="form-group">
+              <label>Last Name *</label>
+              <input id="f_studentLastName" placeholder="Last name" required>
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <select id="f_studentGender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="date" id="f_studentDob">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+<input type="email" id="f_studentEmail" placeholder="pupil@email.com">
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input id="f_studentPhone" placeholder="Phone number">
+            </div>
+            <div class="form-group">
+              <label>Address</label>
+              <input id="f_studentAddress" placeholder="Address">
+            </div>
+            <div class="form-group">
+              <label>Class</label>
+              <select id="f_studentClass"></select>
+            </div>
+            <div class="form-group">
+              <label>Admission Date</label>
+              <input type="date" id="f_studentAdmission">
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select id="f_studentStatus">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="Graduated">Graduated</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Parent/Guardian Name</label>
+              <input id="f_studentParentName" placeholder="Guardian name">
+            </div>
+            <div class="form-group">
+              <label>Parent/Guardian Phone</label>
+              <input id="f_studentParentPhone" placeholder="Guardian phone">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('studentModal')">Cancel</button>
+<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Pupil</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Teacher Modal -->
+  <div id="teacherModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="teacherModalTitle">Add Teacher</h2>
+        <button class="modal-close" onclick="closeModal('teacherModal')">&times;</button>
+      </div>
+      <form id="teacherModalForm" onsubmit="saveTeacher(event)">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>First Name *</label>
+              <input id="f_teacherFirstName" placeholder="First name" required>
+            </div>
+            <div class="form-group">
+              <label>Last Name *</label>
+              <input id="f_teacherLastName" placeholder="Last name" required>
+            </div>
+<div class="form-group">
+              <label>Subject</label>
+              <select id="f_teacherSubject"></select>
+            </div>
+            <div class="form-group">
+              <label>Assigned Class</label>
+              <select id="f_teacherClass"></select>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="f_teacherEmail" placeholder="teacher@email.com">
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input id="f_teacherPhone" placeholder="Phone number">
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select id="f_teacherStatus">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('teacherModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Teacher</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Class Modal -->
+  <div id="classModal" class="modal-overlay">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2 id="classModalTitle">Add Class</h2>
+        <button class="modal-close" onclick="closeModal('classModal')">&times;</button>
+      </div>
+      <form id="classModalForm" onsubmit="saveClass(event)">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Class Name *</label>
+              <input id="f_className" placeholder="e.g. Grade 7A" required>
+            </div>
+            <div class="form-group">
+              <label>Grade</label>
+              <input id="f_classGrade" type="number" placeholder="e.g. 7">
+            </div>
+            <div class="form-group">
+              <label>Section</label>
+              <input id="f_classSection" placeholder="e.g. A">
+            </div>
+            <div class="form-group">
+              <label>Capacity</label>
+              <input id="f_classCapacity" type="number" placeholder="e.g. 30">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('classModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Class</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Subject Modal -->
+  <div id="subjectModal" class="modal-overlay">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2 id="subjectModalTitle">Add Subject</h2>
+        <button class="modal-close" onclick="closeModal('subjectModal')">&times;</button>
+      </div>
+<form id="subjectModalForm" onsubmit="saveSubject(event)">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Subject Name *</label>
+              <input id="f_subjectName" placeholder="e.g. Mathematics" required>
+            </div>
+            <div class="form-group">
+              <label>Subject Code</label>
+              <input id="f_subjectCode" placeholder="e.g. MTH">
+            </div>
+<div class="form-group">
+              <label>Assigned Class</label>
+              <select id="f_subjectClass"></select>
+            </div>
+          </div>
+          <p id="subjectScopeInfo" style="display:none;font-size:13px;color:var(--primary);background:var(--light);padding:10px 12px;border-radius:6px;margin-top:10px"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('subjectModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Subject</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Grade Modal -->
+  <div id="gradeModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="gradeModalTitle">Add Grade</h2>
+        <button class="modal-close" onclick="closeModal('gradeModal')">&times;</button>
+      </div>
+      <form id="gradeModalForm" onsubmit="saveGrade(event)">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+<label>Pupil *</label>
+              <select id="f_gradeStudent" required></select>
+            </div>
+            <div class="form-group">
+              <label>Subject *</label>
+              <select id="f_gradeSubject" required></select>
+            </div>
+            <div class="form-group">
+              <label>Term</label>
+              <select id="f_gradeTerm">
+                <option value="Term 1">Term 1</option>
+                <option value="Term 2">Term 2</option>
+                <option value="Term 3">Term 3</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Score (0-100) *</label>
+              <input id="f_gradeScore" type="number" min="0" max="100" placeholder="e.g. 85" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('gradeModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Grade</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Fee Modal -->
+  <div id="feeModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="feeModalTitle">Record Payment</h2>
+        <button class="modal-close" onclick="closeModal('feeModal')">&times;</button>
+      </div>
+<form id="feeModalForm" onsubmit="saveFee(event)">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Apply To</label>
+              <select id="f_feeScope" onchange="toggleFeeScope()">
+                <option value="single">Single Pupil</option>
+                <option value="class">Whole Class</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Class (for whole class assignment)</label>
+              <select id="f_feeClass"></select>
+            </div>
+            <div class="form-group" id="feeStudentGroup">
+              <label>Pupil *</label>
+              <select id="f_feeStudent" required></select>
+            </div>
+<div class="form-group">
+              <label>Fee Type</label>
+              <select id="f_feeType">
+                <option value="Tuition">Tuition</option>
+                <option value="Bus Fare">Bus Fare</option>
+                <option value="Examination">Examination</option>
+                <option value="Transport">Transport</option>
+                <option value="Library">Library</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Payment Period</label>
+              <select id="f_feePeriod">
+                <option value="Term 1">Term 1</option>
+                <option value="Term 2">Term 2</option>
+                <option value="Term 3">Term 3</option>
+                <option value="Yearly">Yearly</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Total Amount (NLE) *</label>
+              <input id="f_feeAmount" type="number" min="0" step="0.01" placeholder="e.g. 50000" required>
+            </div>
+            <div class="form-group">
+              <label>Amount Paid (NLE)</label>
+              <input id="f_feePaid" type="number" min="0" step="0.01" placeholder="e.g. 20000">
+            </div>
+            <div class="form-group">
+              <label>Due Date</label>
+              <input type="date" id="f_feeDueDate">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('feeModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<!-- Payment Modal -->
+  <div id="paymentModal" class="modal-overlay">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2 id="payModalTitle">Make Payment</h2>
+        <button class="modal-close" onclick="closeModal('paymentModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="payInfo" style="padding:12px;background:var(--light);border-radius:6px;margin-bottom:15px;font-size:14px;line-height:1.8"></div>
+        <form id="payModalForm" onsubmit="savePayment(event)">
+          <div class="form-group">
+            <label>Payment Amount (NLE) *</label>
+            <input id="payAmount" type="number" min="0.01" step="0.01" required>
+          </div>
+          <div style="margin-top:20px;display:flex;gap:10px;justify-content:flex-end">
+            <button type="button" class="btn btn-outline" onclick="closeModal('paymentModal')">Cancel</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Record Payment</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<!-- Report Card Modal -->
+  <div id="reportCardModal" class="modal-overlay">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2>Print Report Card</h2>
+        <button class="modal-close" onclick="closeModal('reportCardModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group">
+<label>Pupil *</label>
+            <select id="rc_student"></select>
+          </div>
+          <div class="form-group">
+            <label>Term</label>
+            <select id="rc_term">
+              <option value="Term 1">Term 1</option>
+              <option value="Term 2" selected>Term 2</option>
+              <option value="Term 3">Term 3</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeModal('reportCardModal')">Cancel</button>
+        <button type="button" class="btn btn-success" onclick="printReportCard()"><i class="fas fa-print"></i> Print</button>
+      </div>
+    </div>
+  </div>
+
+<!-- Sign Up Modal -->
+  <div id="signupModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Create Account</h2>
+        <button class="modal-close" onclick="closeModal('signupModal')">&times;</button>
+      </div>
+      <form id="signupForm" onsubmit="handleSignup(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>I am a...</label>
+            <select id="su_role" onchange="toggleSignupRole()">
+              <option value="teacher">Teacher</option>
+              <option value="parent">Parent / Guardian</option>
+            </select>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input id="su_name" placeholder="Your full name" required>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="su_email" placeholder="you@email.com">
+            </div>
+            <div class="form-group" id="su_teacherClassGroup">
+              <label>Assigned Class</label>
+              <select id="su_teacherClass"><option value="">Select Class</option></select>
+            </div>
+            <div class="form-group" id="su_parentChildGroup" style="display:none">
+              <label>Select Your Child *</label>
+              <select id="su_child" multiple size="4"><option value="">Select Child(ren)</option></select>
+              <small style="color:var(--gray)">Hold Ctrl (Cmd) to select multiple children</small>
+            </div>
+            <div class="form-group">
+              <label>Username *</label>
+              <input id="su_username" placeholder="Choose a username" required>
+            </div>
+            <div class="form-group">
+              <label>Password *</label>
+              <input type="password" id="su_password" placeholder="Create a password" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('signupModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-user-plus"></i> Create Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- View Modal -->
+  <div id="viewModal" class="modal-overlay">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h2 id="viewModalTitle">Details</h2>
+        <button class="modal-close" onclick="closeModal('viewModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="viewModalBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeModal('viewModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+<!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Hidden Print Area -->
+  <div id="printArea" style="display:none"></div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
